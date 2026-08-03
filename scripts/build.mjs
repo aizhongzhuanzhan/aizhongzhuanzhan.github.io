@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DATA_PATH = path.join(ROOT, "data.json");
+const LOCAL_FALLBACK_DATA_PATH = path.resolve(ROOT, "../zhongzhuanzhan.github.io/data.json");
 const PAGE_ROOT = path.join(ROOT, "page");
 const STYLES_PATH = path.join(ROOT, "assets", "styles.css");
 const MINIFIED_STYLES_PATH = path.join(ROOT, "assets", "styles.min.css");
@@ -13,7 +14,7 @@ const SOURCE_URL = process.env.DATA_SOURCE_URL
 const ORIGIN = "https://aizhongzhuanzhan.github.io";
 const SITE_NAME = "AI 中转站推荐";
 const PAGE_SIZE = 30;
-const MAX_SITES = 60;
+const MAX_SITES = 120;
 const SHUFFLE_BAND = 5;
 const SHOULD_SYNC = process.argv.includes("--sync");
 const number = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 1 });
@@ -572,7 +573,7 @@ function renderTopicPage({ topic, sites, allMatches, allSites, updatedDate }) {
     <title>${escapeHtml(title)}</title>
     <meta name="description" content="${escapeHtml(description)}" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
-    <meta name="theme-color" content="#f4f0e8" />
+    <meta name="theme-color" content="#f3f5f7" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="${escapeHtml(title)}" />
     <meta property="og:description" content="${escapeHtml(description)}" />
@@ -796,7 +797,7 @@ function renderPage({ page, totalPages, sites, allSites, updatedDate }) {
     <title>${escapeHtml(title)}</title>
     <meta name="description" content="${escapeHtml(description)}" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
-    <meta name="theme-color" content="#f4f0e8" />
+    <meta name="theme-color" content="#f3f5f7" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="${escapeHtml(title)}" />
     <meta property="og:description" content="${escapeHtml(description)}" />
@@ -917,7 +918,16 @@ async function cleanOldPages(totalPages) {
 
 async function build() {
   if (SHOULD_SYNC) await syncData();
-  const rawPayload = JSON.parse(await readFile(DATA_PATH, "utf8"));
+  let rawPayload = JSON.parse(await readFile(DATA_PATH, "utf8"));
+  if (rawPayload.sites.length < MAX_SITES) {
+    try {
+      const fallbackPayload = JSON.parse(await readFile(LOCAL_FALLBACK_DATA_PATH, "utf8"));
+      validatePayload(fallbackPayload);
+      if (fallbackPayload.sites.length > rawPayload.sites.length) rawPayload = fallbackPayload;
+    } catch (error) {
+      if (error?.code !== "ENOENT") throw error;
+    }
+  }
   validatePayload(rawPayload);
   const payload = limitPayload(rawPayload);
   const updatedDate = normalizeDate(payload.updatedDate) || new Date().toISOString().slice(0, 10);

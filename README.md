@@ -21,7 +21,7 @@ npm run sync
 
 - `index.html`、`page/2/index.html`：每页最多 30 条的静态榜单
 - `*-zhongzhuanzhan/index.html`：GPT、Claude、Codex、Gemini、GLM、Qwen、Kimi 专题
-- `data.json`：最多 60 条的构建快照，包含展示名次与来源名次
+- `data.json`：最多 120 条的构建快照，包含展示名次与来源名次
 - `sitemap.xml`、`robots.txt`、`404.html`：搜索引擎抓取与错误页资源
 - `assets/styles.min.css`：由可维护的 `assets/styles.css` 构建
 

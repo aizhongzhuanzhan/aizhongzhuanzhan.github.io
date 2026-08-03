@@ -35,7 +35,7 @@ function jsonLd(html) {
 }
 
 test("snapshot is limited, unique and mildly shuffled", () => {
-  assert.ok(sites.length > 0 && sites.length <= 60);
+  assert.ok(sites.length > 0 && sites.length <= 120);
   assert.deepEqual(sites.map((site) => site.rank), Array.from({ length: sites.length }, (_, index) => index + 1));
   assert.equal(new Set(sites.map((site) => site.url)).size, sites.length);
   sites.forEach((site) => {
