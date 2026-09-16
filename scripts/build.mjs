@@ -13,6 +13,17 @@ const SOURCE_URL = process.env.DATA_SOURCE_URL
   || "https://raw.githubusercontent.com/hvoyai/awesome-ai-api/main/data.json";
 const ORIGIN = "https://aizhongzhuanzhan.github.io";
 const SITE_NAME = "AI 中转站推荐";
+const BAIDU_TONGJI_SCRIPT = [
+  "<script>",
+  "var _hmt = _hmt || [];",
+  "(function() {",
+  "  var hm = document.createElement(\"script\");",
+  "  hm.src = \"https://hm.baidu.com/hm.js?a95d0c92950541b137908250283f3d91\";",
+  "  var s = document.getElementsByTagName(\"script\")[0];",
+  "  s.parentNode.insertBefore(hm, s);",
+  "})();",
+  "</script>",
+].join("\n");
 const PAGE_SIZE = 30;
 const MAX_SITES = 120;
 const SHUFFLE_BAND = 5;
@@ -590,6 +601,7 @@ function renderTopicPage({ topic, sites, allMatches, allSites, updatedDate }) {
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../assets/styles.min.css" />
     <script type="application/ld+json">${jsonLd}</script>
+    ${BAIDU_TONGJI_SCRIPT}
   </head>
   <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -816,6 +828,7 @@ function renderPage({ page, totalPages, sites, allSites, updatedDate }) {
     <link rel="icon" href="${root}/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="${root}/assets/styles.min.css" />
     <script type="application/ld+json">${jsonLd}</script>
+    ${BAIDU_TONGJI_SCRIPT}
   </head>
   <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
